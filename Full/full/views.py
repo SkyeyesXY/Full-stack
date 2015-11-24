@@ -8,36 +8,37 @@ from django.http import HttpResponseRedirect
 
 
 def search(request):
-    return render_to_response('search.html')
+    try:
+        try:
+            show1 = bool(request.GET['long_url'])
+            if show1 == True:
+                print(show1)
+                long_url = request.GET['long_url']
+                key = request.GET['diy_url']
+                if key != '':
+                    short_url = key
+                else:
+                    short_url = shorturl(long_url)
+                if not Short_url.objects.filter(shortdata = short_url):
+                    Short_url.objects.create(shortdata = short_url, longdata = long_url)
+                return render_to_response('search.html', {'show1':show1, 'short_url':short_url})
+        except:
+            show2 = bool(request.GET['short_url'])
+            if show2 == True:
+                short_url = request.GET['short_url']
+                key = re.findall('8000/(.*)', short_url)[0]
+                urldata = Short_url.objects.filter(shortdata = key)[0]
+                recover_url = urldata.longdata
+                return render_to_response('search.html', {'show2':show2, 'long_url':recover_url})
 
-
-def short(request):
-    long_url = request.GET['long_url']
-    short_url = shorturl(long_url)
-    if not Short_url.objects.filter(shortdata = short_url):
-        Short_url.objects.create(shortdata = short_url, longdata = long_url)
-    return render_to_response('result.html', {'short_url':short_url, 'long_url':long_url})
-
-
-def recover(request):
-    short_url = request.GET['short_url']
-    key = re.findall('8000/(.*)', short_url)[0]
-    urldata = Short_url.objects.filter(shortdata = key)[0]
-    recover_url = urldata.longdata
-    return render_to_response('result.html', {'short_url':key, 'long_url':recover_url})
+    except:
+        return render_to_response('search.html')
 
 
 def match(request, get_url):        #获取匹配到的短网址的值
     urldata = Short_url.objects.filter(shortdata = get_url)[0]
     url = urldata.longdata
     return HttpResponseRedirect(url)
-
-
-# 1)将长网址md5生成32位签名串,分为4段, 每段8个字节;
-# 2)对这四段循环处理, 取8个字节, 将他看成16进制串与0x3fffffff(30位1)与操作, 即超过30位的忽略处理;
-# 3)这30位分成6段, 每5位的数字作为字母表的索引取得特定字符, 依次进行获得6位字符串;
-# 4)总的md5串可以获得4个6位串; 取里面的任意一个就可作为这个长url的短url地址;
-# 这种算法,虽然会生成4个,但是仍然存在重复几率,下面的算法一和三,就是这种的实现.
 
 
 def shorturl(url):

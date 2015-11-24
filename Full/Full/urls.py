@@ -15,13 +15,11 @@ Including another URLconf
 """
 from django.conf.urls import include, url
 from django.contrib import admin
-from full.views import search, short, match, recover
+from full.views import search, match
 
 
 urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
     url(r'^$', search),
-    url(r'^short/$', short),
-    url(r'^recover/$', recover),
     url(r'(.+)/$', match),
 ]

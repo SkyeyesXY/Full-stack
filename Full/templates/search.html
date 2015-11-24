@@ -1,3 +1,4 @@
+{% load i18n %}
 <html><!--search.html-->
 <head>
     <title>Search</title>
@@ -6,47 +7,81 @@
         h1{
             position:relative;
             left:450px;
-            top:150px;
+            top:50px;
         }
         form{
-            width:200px;
+            width:450px;
             height:200px;
             border:2px blue solid;
-            float:left;
+            float:top;
             position:relative;
             left:350px;
-            top:150px;
+            top:50px;
         }
-
-        .long_url input{outline:0;width:432px;height:17px;font-size:14px;padding:4px 5px 0;border:0}
-
         .get_url, .recover{
             position:relative;
             left:15px;
             top:20px;
         }
+        .diy{
+            font-size:10px;
+            position: relative;
+            top: 20px;
+        }
+        .url_input, .url_recover {
+            position: relative;
+            top: 10px;
+        }
+        .button{
+            position: relative;
+            top: 30px;
+        }
+        .shorturl, .longurl{
+            position: relative;
+            top: 60px;
+            left:20px;
+        }
     </style>
 </head>
 <body>
-    <form action="/short/" method="get" id="get_url">
+    <script>
+        var show1 = {{ show1 }};
+        var show2 = {{ show2 }};
+    </script>
+    <form action="" method="get" id="get_url">
         <div class="get_url">
             <label for="long_url" class="long_url_tip">请输入长网址</label>
             <div class="url_input">
-                <input type="text" name="long_url" id="long_url">
-                <input type="reset" value="重置" form="get_url">
-                <input type="submit" value="获取短网址" form="get_url">
+                <input type="text" name="long_url" id="long_url" size="45">
+            </div>
+            <div class="diy">
+            自定义:http://127.0.0.1:8000&nbsp;&nbsp;<input type="text" name="diy_url" id="diy_url">
+            </div >
+            <div class="button">
+            <input type="reset" value="重置" form="get_url">
+            <input type="submit" value="获取短网址" form="get_url">
             </div>
         </div>
+        {% if show1 == True %}
+            <div class="shorturl">
+                您的短网址结果是:127.0.0.1:8000/{{ short_url }}
+            </div>
+        {% endif %}
     </form>
-    <form action="/recover/" method="get" id="recover">
+    <form action="" method="get" id="recover">
         <div class="recover">
             <label for="short_url" class="short_url_tip">请输入短网址</label>
             <div class="url_recover">
-                <input type="text" name="short_url" id="short_url">
+                <input type="text" name="short_url" id="short_url" size="30" value="">
                 <input type="reset" value="重置" form="recover">
                 <input type="submit" value="还原网址" form="recover">
             </div>
         </div>
+        {% if show2 == True %}
+            <div class="longurl">
+                您的原网址是:{{ long_url }}
+            </div>
+        {% endif %}
     </form>
 </body>
 </html>

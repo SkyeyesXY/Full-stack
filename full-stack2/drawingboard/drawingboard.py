@@ -108,11 +108,20 @@ def judgemoveshape(x, y):
 
 def moveshape(begin_x, begin_y, end_x, end_y, shapeid):
     movex = end_x-begin_x
+    if movex >= 0:
+        movex = movex if max(shapelist[shapeid].end_x, shapelist[shapeid].begin_x)+movex <= 1100 else 0
+    else:
+        movex = movex if min(shapelist[shapeid].end_x, shapelist[shapeid].begin_x)+movex >= 100 else 0
     movey = end_y-begin_y
-    shapelist[shapeid].begin_x += movex
-    shapelist[shapeid].begin_y += movey
+    if movey >= 0:
+        movey = movey if max(shapelist[shapeid].end_y, shapelist[shapeid].begin_y)+movey <= 700 else 0
+    else:
+        movey = movey if min(shapelist[shapeid].end_y, shapelist[shapeid].begin_y)+movey >= 100 else 0
     shapelist[shapeid].end_x += movex
+    shapelist[shapeid].begin_x += movex
     shapelist[shapeid].end_y += movey
+    shapelist[shapeid].begin_y += movey
+    print(str(shapeid))
     print(shapelist[shapeid].shapestyle)
 
 
@@ -185,7 +194,7 @@ while True:
     if down == True and begin_x >= 100 and begin_y >= 100 and end_x >= 100 and end_y >= 100:
         if shapestyle:
             model().judge_draw_shape(begin_x, begin_y, end_x, end_y, shapestyle)
-        elif move:
+        elif move and shapechooseid >= 0:
             moveshape(begin_x, begin_y, end_x, end_y, shapechooseid)
             begin_x = end_x
             begin_y = end_y
